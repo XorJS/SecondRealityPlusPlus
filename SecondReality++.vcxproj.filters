@@ -1,0 +1,329 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Parts\END\END.cpp">
+      <Filter>Parts\21-EndPic</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\ENDSCRL\ENDSCRL_MAIN.cpp">
+      <Filter>Parts\23-Endscroll</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\PAM\OUTTAA.cpp">
+      <Filter>Parts\03a-IntroPraxisBlast</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\Common.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\CREDITS\CREDITS_MAIN.cpp">
+      <Filter>Parts\22-Credits</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\VISU\VISU.cpp">
+      <Filter>Parts\VISU</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\MENU.cpp">
+      <Filter>Parts</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\Graphics.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Music\REALITY.FC.cpp">
+      <Filter>Music</Filter>
+    </ClCompile>
+    <ClCompile Include="Music\music.cpp">
+      <Filter>Music</Filter>
+    </ClCompile>
+    <ClCompile Include="Music\st3play.cpp">
+      <Filter>Music</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\PAM\OUTTAA_Data.cpp">
+      <Filter>Parts\03a-IntroPraxisBlast</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\ENDSCRL\ENDSCRL_MAIN_Data.cpp">
+      <Filter>Parts\23-Endscroll</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\ENDSCRL\ENDSCRL_MAIN_Data.h">
+      <Filter>Parts\23-Endscroll</Filter>
+    </ClCompile>
+    <ClCompile Include="Blob\Blob.cpp">
+      <Filter>Blob</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\CREDITS\CREDITS_MAIN_Data.cpp">
+      <Filter>Parts\22-Credits</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\END\END_Data.cpp">
+      <Filter>Parts\21-EndPic</Filter>
+    </ClCompile>
+    <ClCompile Include="Blob\Blob_Data.cpp">
+      <Filter>Blob</Filter>
+    </ClCompile>
+    <ClCompile Include="Graphics\shims.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\DDSTARS\DDStars.cpp">
+      <Filter>Parts\HiddenPart</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\ALKU\ALKU_MAIN.cpp">
+      <Filter>Parts\01-IntroScroll</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\ALKU\ALKU_MAIN_Data.cpp">
+      <Filter>Parts\01-IntroScroll</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\VISU\VISU_Data.cpp">
+      <Filter>Parts\VISU</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\BEG\BeginTitleScreen.cpp">
+      <Filter>Parts\03b-BeginTitleScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\BEG\BeginTitleScreen_Data.cpp">
+      <Filter>Parts\03b-BeginTitleScreen</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\GLENZ\GLENZ_DATA.cpp">
+      <Filter>Parts\04-Glenz</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\GLENZ\GLENZ_MAIN.cpp">
+      <Filter>Parts\04-Glenz</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\COMAN\COMAN_Data.cpp">
+      <Filter>Parts\17-ComancheVoxel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\COMAN\COMAN_MAIN.cpp">
+      <Filter>Parts\17-ComancheVoxel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\FOREST\Forest.cpp">
+      <Filter>Parts\08-ForestScroller</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\FOREST\Forest_Data.cpp">
+      <Filter>Parts\08-ForestScroller</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\PANIC\SHUTDOWN.cpp">
+      <Filter>Parts\07-PanicShutdown</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\LENS\LENS_MAIN.cpp">
+      <Filter>Parts\11-12-Lens</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\LENS\LENS_MAIN_Data.cpp">
+      <Filter>Parts\11-12-Lens</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\TECHNO\KOE.cpp">
+      <Filter>Parts\06-Techno</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\TECHNO\KOE_Data.cpp">
+      <Filter>Parts\06-Techno</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\WATER\Water.cpp">
+      <Filter>Parts\16-MirrorBallScroller</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\WATER\Water_Data.cpp">
+      <Filter>Parts\16-MirrorBallScroller</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\PLZPART\PLZ.cpp">
+      <Filter>Parts\13-14-Plasmacube</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\PLZPART\PLZ_Data.cpp">
+      <Filter>Parts\13-14-Plasmacube</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\JPLOGO\JP.cpp">
+      <Filter>Parts\18-JellyLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\JPLOGO\JP_Data.cpp">
+      <Filter>Parts\18-JellyLogo</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\DOTS\DOTS_MAIN.cpp">
+      <Filter>Parts\15-Dots</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\TUNNELI\Tunneli.cpp">
+      <Filter>Parts\05-DotTunnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\TUNNELI\Tunneli_Data.cpp">
+      <Filter>Parts\05-DotTunnel</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\DDSTARS\DDStars_Data.cpp">
+      <Filter>Parts\HiddenPart</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\CITY\U2E.cpp">
+      <Filter>Parts\19-City3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\INTRO3D\U2A.cpp">
+      <Filter>Parts\02-Intro3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Parts\INTRO3D\U2A_DATA.cpp">
+      <Filter>Parts\02-Intro3D</Filter>
+    </ClCompile>
+    <ClCompile Include="Music\audioPlayer.cpp">
+      <Filter>Music</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Parts\Common.h">
+      <Filter>Parts</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources\resource.h">
+      <Filter>Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\Graphics.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Music\REALITY.FC.h">
+      <Filter>Music</Filter>
+    </ClInclude>
+    <ClInclude Include="Blob\Blob.h">
+      <Filter>Blob</Filter>
+    </ClInclude>
+    <ClInclude Include="Graphics\shims.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\ALKU\ALKU_MAIN_Data.h">
+      <Filter>Parts\01-IntroScroll</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\PAM\OUTTAA_Data.h">
+      <Filter>Parts\03a-IntroPraxisBlast</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\BEG\BeginTitleScreen_Data.h">
+      <Filter>Parts\03b-BeginTitleScreen</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\GLENZ\GLENZ_DATA.h">
+      <Filter>Parts\04-Glenz</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\TUNNELI\Tunneli_Data.h">
+      <Filter>Parts\05-DotTunnel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\TECHNO\KOE_Data.h">
+      <Filter>Parts\06-Techno</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\FOREST\Forest_Data.h">
+      <Filter>Parts\08-ForestScroller</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\LENS\LENS_MAIN_Data.h">
+      <Filter>Parts\11-12-Lens</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\PLZPART\PLZ_Data.h">
+      <Filter>Parts\13-14-Plasmacube</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\WATER\Water_Data.h">
+      <Filter>Parts\16-MirrorBallScroller</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\COMAN\COMAN_Data.h">
+      <Filter>Parts\17-ComancheVoxel</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\JPLOGO\JP_Data.h">
+      <Filter>Parts\18-JellyLogo</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\END\END_Data.h">
+      <Filter>Parts\21-EndPic</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\CREDITS\CREDITS_MAIN_Data.h">
+      <Filter>Parts\22-Credits</Filter>
+    </ClInclude>
+    <ClInclude Include="Music\Music.h">
+      <Filter>Music</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\DDSTARS\DDStars_Data.h">
+      <Filter>Parts\HiddenPart</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\VISU\VISU.h">
+      <Filter>Parts\VISU</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\VISU\VISU_Data.h">
+      <Filter>Parts\VISU</Filter>
+    </ClInclude>
+    <ClInclude Include="Parts\INTRO3D\U2A_DATA.h">
+      <Filter>Parts\02-Intro3D</Filter>
+    </ClInclude>
+    <ClInclude Include="Music\st3play.h">
+      <Filter>Music</Filter>
+    </ClInclude>
+    <ClInclude Include="Music\audioPlayer.h">
+      <Filter>Music</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Parts">
+      <UniqueIdentifier>{78585c14-9278-4ee8-87d6-b22709b9851d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resources">
+      <UniqueIdentifier>{42bb7d77-dea5-4ab0-8a78-0ece2cfdb3ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{7d7fba8f-85a8-4624-9b30-dc6622d2e3c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Music">
+      <UniqueIdentifier>{5d816797-045d-4494-8f71-3efddf70aeb7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Blob">
+      <UniqueIdentifier>{6e71e613-4730-49a9-a66d-65261ed552a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\01-IntroScroll">
+      <UniqueIdentifier>{53556962-13bc-4283-a965-87491e0a79b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\02-Intro3D">
+      <UniqueIdentifier>{0cb671d0-ad32-42ef-9d2a-c057de8ae097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\03a-IntroPraxisBlast">
+      <UniqueIdentifier>{f701f20d-cae8-4bff-9c0d-e40e68fe31c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\17-ComancheVoxel">
+      <UniqueIdentifier>{cc236c22-f955-4b11-be34-d1a96a7d7319}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\16-MirrorBallScroller">
+      <UniqueIdentifier>{0ca68ce2-bb62-4380-a7f8-4a13ccff51bb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\15-Dots">
+      <UniqueIdentifier>{13afc6c3-7159-4404-a106-322c18e461ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\13-14-Plasmacube">
+      <UniqueIdentifier>{457ddf6e-ffc3-4ffa-b5a9-ae0918fab8ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\11-12-Lens">
+      <UniqueIdentifier>{3fac80c4-f0ed-4cc6-b23d-3c6d5a03ff97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\08-ForestScroller">
+      <UniqueIdentifier>{e6bd5c86-4489-4ee0-ba5b-f4c6e3742953}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\07-PanicShutdown">
+      <UniqueIdentifier>{3c4c2862-5a82-4e01-97d9-2ee8f80219c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\06-Techno">
+      <UniqueIdentifier>{1519af0d-6b4c-41ca-9c5d-35749e2ea049}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\05-DotTunnel">
+      <UniqueIdentifier>{932b21a6-e521-4d99-8508-9ca1ad78a6e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\04-Glenz">
+      <UniqueIdentifier>{52f24579-f26b-46a2-83ed-9050ee17c057}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\03b-BeginTitleScreen">
+      <UniqueIdentifier>{dd337c00-93cc-441f-91d4-73ef4ffd70b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\18-JellyLogo">
+      <UniqueIdentifier>{932452aa-4afb-45f4-866c-b5c06b7c898d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\19-City3D">
+      <UniqueIdentifier>{17e0b5c1-f459-4361-9699-55de3ea7318f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\21-EndPic">
+      <UniqueIdentifier>{86c1373c-04ae-485b-a3df-e1dec86c21ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\22-Credits">
+      <UniqueIdentifier>{80e1ed27-1626-4254-a955-46659d280a43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\23-Endscroll">
+      <UniqueIdentifier>{b5280ce2-4192-462c-bfa4-270ba28c9413}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\HiddenPart">
+      <UniqueIdentifier>{03327537-84a3-41d0-b4ab-934abfb5008a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Parts\VISU">
+      <UniqueIdentifier>{58313135-9fc4-4f06-95a4-90415d388a2b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Resources\atomic_playboy.ico">
+      <Filter>Resources</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resources\Resource.rc">
+      <Filter>Resources</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

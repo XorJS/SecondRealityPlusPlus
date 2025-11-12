@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"/>
+    <title>Second Reality++</title>
+    <style>
+        html, body { margin:0; padding:0; height:100%; background:black; }
+        #canvas {
+          position: fixed; inset: 0;
+          width: 100vw; height: 100dvh;
+          display:block; touch-action:none;
+          image-rendering: pixelated;
+        }        
+    </style>
+    <meta name="description" content="Second Reality++">
+    <meta name="keywords" content="Second Reality, Second Reality++">
+    <meta name="author" content="Jean-Sebastien Royer">
+  </head>
+  <body>
+    <canvas class="emscripten" id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+    <script type='text/javascript'>
+      var Module = {
+        preRun: [],
+        postRun: [],
+        print: (function() {
+            return function(text) {
+                text = Array.prototype.slice.call(arguments).join(' ');
+                console.log(text);
+            };
+        })(),
+        printErr: function(text) {
+            text = Array.prototype.slice.call(arguments).join(' ');
+            console.error(text);
+        },
+        canvas: (function() {
+            var canvas = document.getElementById('canvas');
+            return canvas;
+        })(),
+        setStatus: function(text) {
+            console.log("status: " + text);
+        },
+        monitorRunDependencies: function(left) {
+        }
+      };
+      window.onerror = function() {
+        console.log("onerror: " + event);
+      };
+
+    </script>
+    {{{ SCRIPT }}}
+  </body>
+</html>

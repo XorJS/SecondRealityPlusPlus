@@ -1,0 +1,6 @@
+[submodule "References/SecondReality"]
+	path = References/SecondReality
+	url = https://github.com/mtuomi/SecondReality.git
+[submodule "References/SecondRealityW32"]
+	path = References/SecondRealityW32
+	url = https://github.com/ConspiracyHu/SecondRealityW32.git

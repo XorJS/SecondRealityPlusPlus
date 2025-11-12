@@ -1,0 +1,85 @@
+�����������������������������������������������������������������������������Ŀ
+�                                                                             �
+�                             = Second Reality =                              �
+�                                                                             �
+�                     Copyright (C) 1993 by the Future Crew                   �
+�                                                                             �
+�����������������������������������������������������������������������������Ĵ
+�                                                                             �
+�                     Released on the 7th of October 1993                     �
+�                                                                             �
+�                        This demo won the Assembly'93                        �
+�                    annual international demo competition                    �
+�                        held in Finland, summer 1993.                        �
+�                                                                             �
+�                            This demo is freeware.                           �
+�             It can be freely distributed without modifications.             �
+�                       No money can be charged for it.                       �
+�                                                                             �
+�����������������������������������������������������������������������������Ĵ
+�                                                                             �
+�                   Ported to Windows x86 by Conspiracy in 2025               �
+�                                                                             �
+�                         = Released at Assembly '25 =                        �
+�                                                                             �
+�����������������������������������������������������������������������������Ĵ
+�                                                                             �
+�                  Ported to C++ (Win x86/x64, Linux and WASM) by             �
+�                            Jean-Sebastien Royer                             �
+�                                                                             �
+�                         = Released November 15, 2025 =                      �
+�                                                                             �
+�������������������������������������������������������������������������������
+
+        Ported Second Reality from mixed C / C++ / Pascal / ASM
+        based on (Gargaj / Conspiracy) version to 
+        modern, cross-platform C++ targeting 
+        Windows (x64/x86), Linux, and WebAssembly
+
+
+        CREDITS AND ACKNOWLEDGEMENTS
+        ----------------------------
+
+        The original code for the demo was done by
+          Sami "PSI" Tammilehto
+          Mika "Trug" Tuomi
+          and Arto "Wildfire" Vuori
+
+        C++ version was done by Jean-Sebastien Royer
+
+        Original Win32 Porting work was done by Gargaj / Conspiracy
+
+        The port uses a heavily modded version of st3play v1.01
+        by Olav "8bitbubsy" Sorensen (https://16-bits.org)
+        for music replay
+
+        Additional credits and heartfelt thankyous go to
+          Trixter / Hornet
+            for sharing his considerable knowledge on the workings
+            of early EGA/VGA and for some reverse engineering help.
+          Saga Musix / Nuance
+            for his insight into STMIK and the Scream Tracker
+            module format.
+
+
+        LINKS
+        -----
+
+        The original source is available at
+          https://github.com/mtuomi/SecondReality
+
+        The Win32 ported source is available at
+          https://github.com/ConspiracyHu/SecondRealityW32
+
+        The C++ Windows (x64/x86), Linux, and 
+        WebAssembly port source is available at
+          https://github.com/XorJS/SecondRealityPlusPlus
+
+        You can get in touch at
+          https://www.jsr-productions.com/secondreality.html
+          https://x.com/JSRProductions
+          https://github.com/XorJS
+
+        Huge thanks to Gargaj/Conspiracy, 
+        whose Win32 port inspired this C++ port,
+        - JS
