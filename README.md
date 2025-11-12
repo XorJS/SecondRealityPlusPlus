@@ -6,7 +6,9 @@ C++ version of "Second Reality by Future Crew"
 - https://github.com/XorJS/SecondRealityPlusPlus
 
 ## Info
-- Ported Second Reality from mixed C / C++ / Pascal / ASM based on (Gargaj / Conspiracy) version to modern, cross-platform C++ targeting Windows (x64/x86), Linux, and WebAssembly
+- Ported Second Reality from mixed C / C++ / Pascal / ASM based to modern, cross-platform C++ targeting Windows (x64/x86), Linux, and WebAssembly
+- Big thanks to Gargaj / Conspiracy for releasing a 32-bit Windows (Win32) port
+- After seeing [this post on X](https://x.com/conspiracyhu/status/1951399870448775538), I started this effort and Second Reality++ is based on that version
 
 ## Platforms
 - Windows x64 / x86
@@ -14,17 +16,22 @@ C++ version of "Second Reality by Future Crew"
 - Web browsers (Google Chrome)
 
 ## TODO ****************************************************************
-- Platforms
 - Youtube videos
 - How to build/run
 - Tested
 - more info...
 
 # References
-- Original Win 32 Port:  https://github.com/ConspiracyHu/SecondRealityW32
+- Original Windows 32bits Port:  https://github.com/ConspiracyHu/SecondRealityW32
 - Original Source Code: https://github.com/mtuomi/SecondReality
 
-* The repositories above are included as Git submodules under the References/ folder.
+	The repositories above are included as Git submodules under the References/ folder
+
+	If you don't see the repos:
+	```
+		git submodule init
+		git submodule update --init --recursive
+	```
 
 ## Thanks
 - Huge thanks to Gargaj/Conspiracy, whose Win32 port inspired this C++ port
