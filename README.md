@@ -16,17 +16,27 @@ C++ version of "Second Reality by Future Crew"
 - Linux (Ubuntu)
 - Web browsers (e.g. Google Chrome)
 
+## Tested
+- Windows: Win10/11 (x64 and x86 versions)
+- Linux: Ubuntu
+- Web: macOS(Safari), android, iOS, Windows(Chrome/Firefox/Edge), Ubuntu(Firefox/Chrome)
+* For the web, Chrome is the best for the experience 
+
 ## Videos
 [Windows x64 - Fullscreen](http://www.youtube.com/watch?v=6vqV1JEFuog)
+
 [![Windows x64 - Fullscreen](http://img.youtube.com/vi/6vqV1JEFuog/0.jpg)](http://www.youtube.com/watch?v=6vqV1JEFuog)
 
 [Windows x86 - windows mode](http://www.youtube.com/watch?v=dqctyPvdK64)
+
 [![Windows x86 - windows mode](http://img.youtube.com/vi/dqctyPvdK64/0.jpg)](http://www.youtube.com/watch?v=dqctyPvdK64)
 
 [Ubuntu - windows mode](http://www.youtube.com/watch?v=2fx-b-zLOcc)
+
 [![Ubuntu - windows mode](http://img.youtube.com/vi/2fx-b-zLOcc/0.jpg)](http://www.youtube.com/watch?v=2fx-b-zLOcc)
 
 [Web - Google Chrome](http://www.youtube.com/watch?v=MDkMdTUCUKE)
+
 [![Web - Google Chrome](http://img.youtube.com/vi/MDkMdTUCUKE/0.jpg)](http://www.youtube.com/watch?v=MDkMdTUCUKE)
 
 ## Web
@@ -35,6 +45,8 @@ C++ version of "Second Reality by Future Crew"
 - [Start at the Logo scene](https://www.jsr-productions.com/secondreality/logo.html)
 
 * Don't forget to tap or click on screen to enable the audio (Web browsers requirement)
+
+* iOS: Still no sound? Look at the button above the volume up (mute button)
 
 ## How to Build
 
@@ -49,10 +61,6 @@ C++ version of "Second Reality by Future Crew"
 - Call BuildWeb.bat script
 - Don't forget to launch once WebServer.bat script if you run it locally
 
-## TODO ****************************************************************
-- Tested
-- todo/to-improve
-
 ## References
 - Original Windows 32bits Port:  https://github.com/ConspiracyHu/SecondRealityW32
 - Original Source Code: https://github.com/mtuomi/SecondReality
@@ -64,7 +72,6 @@ C++ version of "Second Reality by Future Crew"
 		git submodule init
 		git submodule update --init --recursive
 	```
-
 ## Thanks
 - Huge thanks to Gargaj / Conspiracy, whose Win32 port inspired this C++ port
 
@@ -74,6 +81,14 @@ C++ version of "Second Reality by Future Crew"
   - Mika "Trug" Tuomi
   - Arto "Wildfire" Vuori
 - [st3play v1.01](https://pastebin.com/raw/AwRXZAw7) by Olav "8bitbubsy" Sørensen (https://16-bits.org)
+
+## TODO / To Improve
+- Switch to partial texture updates (DirectX/OpenGL) instead of full uploads
+- Convert codebase to be more C++ (e.g. replace old C casting)
+- Improve timing on Firefox for Web/WASM
+- Split and create multiple files for graphics and audio (e.g. platforms)
+- Unify primitive types like uint8_t versus unsigned char
+- Reduce #ifdef
 
 ## Links
 - [Future Crew](http://en.wikipedia.org/wiki/Future_Crew)
