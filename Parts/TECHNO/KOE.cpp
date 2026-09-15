@@ -96,6 +96,26 @@ namespace KOE
 
         unsigned char koe_tempbuf[PLANAR_WIDTH * DOUBlE_SCREEN_HEIGHT] = { 0 };
         unsigned char koe_planar[PLANAR_WIDTH * DOUBlE_SCREEN_HEIGHT * 4] = { 0 };
+
+        // Bit-reversal lookup table (matches Win32 ASM flip8)
+        static const uint8_t flip8_table[256] = {
+            0,128, 64,192, 32,160, 96,224, 16,144, 80,208, 48,176,112,240,
+            8,136, 72,200, 40,168,104,232, 24,152, 88,216, 56,184,120,248,
+            4,132, 68,196, 36,164,100,228, 20,148, 84,212, 52,180,116,244,
+           12,140, 76,204, 44,172,108,236, 28,156, 92,220, 60,188,124,252,
+            2,130, 66,194, 34,162, 98,226, 18,146, 82,210, 50,178,114,242,
+           10,138, 74,202, 42,170,106,234, 26,154, 90,218, 58,186,122,250,
+            6,134, 70,198, 38,166,102,230, 22,150, 86,214, 54,182,118,246,
+           14,142, 78,206, 46,174,110,238, 30,158, 94,222, 62,190,126,254,
+            1,129, 65,193, 33,161, 97,225, 17,145, 81,209, 49,177,113,241,
+            9,137, 73,201, 41,169,105,233, 25,153, 89,217, 57,185,121,249,
+            5,133, 69,197, 37,165,101,229, 21,149, 85,213, 53,181,117,245,
+           13,141, 77,205, 45,173,109,237, 29,157, 93,221, 61,189,125,253,
+            3,131, 67,195, 35,163, 99,227, 19,147, 83,211, 51,179,115,243,
+           11,139, 75,203, 43,171,107,235, 27,155, 91,219, 59,187,123,251,
+            7,135, 71,199, 39,167,103,231, 23,151, 87,215, 55,183,119,247,
+           15,143, 79,207, 47,175,111,239, 31,159, 95,223, 63,191,127,255
+        };
     }
 
     void _initinterferenceKOEA_A(char * memory);
@@ -196,11 +216,9 @@ namespace KOE
         for (int plane = 0; plane < plane_count; plane++)
         {
             for (int i = 0; i < 40; i++)
-            {
-                dst[plane * (PLANAR_WIDTH * DOUBlE_SCREEN_HEIGHT) + i] = Data::flip8[src[39 - i]];
-            }
-
+                dst[i] = flip8_table[src[39 - i]];
             src += 40;
+            dst += PITCH;
         }
     }
 
@@ -232,10 +250,10 @@ namespace KOE
 
         for (int y = 0; y < 200; y++)
         {
-            bltline(src, dst, 0x01, 4);
-            bltlinerev(src, dst + 40, 0x01, 4);
-            bltline(src, dst_bottom, 0x01, 4);
-            bltlinerev(src, dst_bottom + 40, 0x01, 4);
+            bltline(src, dst, 0x01, 1);
+            bltlinerev(src, dst + 40, 0x01, 1);
+            bltline(src, dst_bottom, 0x01, 1);
+            bltlinerev(src, dst_bottom + 40, 0x01, 1);
 
             dst += PLANAR_WIDTH;
             dst_bottom -= PLANAR_WIDTH;
@@ -510,11 +528,10 @@ namespace KOE
         memcpy(dst, src, 40);
     }
 
-    // Copy one 40-byte scanline reversed in X with bit-reversal
     static inline void bltlinerev_mono(const uint8_t * src, uint8_t * dst)
     {
-        for (int i = 0; i < 40; ++i)
-            dst[i] = Data::flip8[src[39 - i]];
+        for (int i = 0; i < 40; i++)
+            dst[i] = flip8_table[src[39 - i]];
     }
 
     // Copy N planes from packed src (each 40 bytes) to planar dst slice (each PITCH)
@@ -524,15 +541,14 @@ namespace KOE
             memcpy(dst + p * PITCH, src + p * 40, 40);
     }
 
-    // Reversed + bit-flipped per plane
-    static inline void bltlinerev_planes(const uint8_t * src, uint8_t * dst, int planes)
+    static void bltlinerev_planes(const uint8_t * src, uint8_t * dst, int planes)
     {
         for (int p = 0; p < planes; ++p)
         {
             const uint8_t * s = src + p * 40;
             uint8_t * d = dst + p * PITCH;
-            for (int i = 0; i < 40; ++i)
-                d[i] = Data::flip8[s[39 - i]];
+            for (int i = 0; i < 40; i++)
+                d[i] = flip8_table[s[39 - i]];
         }
     }
 
@@ -607,7 +623,7 @@ namespace KOE
         }
 
         // Copy 32k to circles[0], then build 7 rotated pages
-        memcpy(circles[0], koe_tempbuf, 32000);
+        memcpy(circles[0], koe_tempbuf, sizeof(koe_tempbuf));
         for (int i = 0; i < 7; ++i)
             rotate1_page_rcr(circles[i], circles[i + 1]);
 
@@ -697,7 +713,7 @@ namespace KOE
 
                 int32_t byte_off = sar_div8(eax);
                 src += (uint16_t)overyaA;
-                src += (uint32_t)byte_off;
+                src += (int32_t)byte_off;
                 src += esi_base;
 
                 for (int i = 0; i < 44; i += 4)
