@@ -12,10 +12,15 @@
 
 #else
 
+#ifdef __APPLE__
+#define GL_SILENCE_DEPRECATION 1
+#include <OpenGL/gl3.h>
+#else
 #define GL_GLEXT_PROTOTYPES 1
 #include <GLES3/gl3.h>
-#include <SDL.h>
 #include <SDL_opengles2.h>
+#endif // __APPLE__
+#include <SDL.h>
 
 #ifdef __EMSCRIPTEN__
 
@@ -638,6 +643,9 @@ namespace
     GLint g_Loc_uTex0 = -1;
     GLint g_Loc_uTex1 = -1;
     GLuint g_VBO = 0;
+#ifdef __APPLE__
+    GLuint g_VAO = 0;
+#endif
     GLuint g_texture = 0;
     GLint g_Loc_aPos = -1;
     GLint g_Loc_aUV = -1;
@@ -717,6 +725,33 @@ void UpdateTextureRGBA8(GLuint tex, int w, int h, const void * pixels)
 
 static void initGL()
 {
+#ifdef __APPLE__
+    // Core profile: GLSL 1.50 and a bound VAO are mandatory
+    const char * vertexShader = "#version 150\n"
+                                "in      vec2 aPos;\n"
+                                "in      vec2 aUV;\n"
+                                "uniform vec3 uResolution;\n"
+                                "out     vec2 vUV;\n"
+                                "void main(){\n"
+                                "  vec2 pos = (aPos / uResolution.xy) * 2.0 - 1.0;\n"
+                                "  pos.y = -pos.y;\n"
+                                "  gl_Position = vec4(pos, 0.0, 1.0);\n"
+                                "  vUV = aUV;\n"
+                                "}\n";
+
+    const char * fragmentShader = "#version 150\n"
+                                  "in vec2 vUV;\n"
+                                  "out vec4 fragColor;\n"
+                                  "uniform vec3 uResolution;\n"
+                                  "uniform sampler2D uTex0;\n"
+                                  "uniform sampler2D uTex1;\n"
+                                  "void main(){\n"
+                                  "  fragColor = vec4(mix(texture(uTex0, vUV).bgr, texture(uTex1, vUV).bgr, uResolution.z),1);\n"
+                                  "}\n";
+
+    glGenVertexArrays(1, &g_VAO);
+    glBindVertexArray(g_VAO);
+#else
     const char * vertexShader = "precision mediump float;\n"
                                 "attribute vec2 aPos;\n"
                                 "attribute vec2 aUV;\n"
@@ -737,6 +772,7 @@ static void initGL()
                                   "void main(){\n"
                                   "  gl_FragColor = vec4(mix(texture2D(uTex0, vUV).bgr, texture2D(uTex1, vUV).bgr, uResolution.z),1);\n"
                                   "}\n";
+#endif // __APPLE__
 
     GLuint vs = compileShader(GL_VERTEX_SHADER, vertexShader);
     GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
@@ -1078,6 +1114,15 @@ void InstallClickAnywhereFullscreen() {}
 
 #endif // __EMSCRIPTEN__
 
+static void UpdateDrawableSize()
+{
+    int width = 0, height = 0;
+    SDL_GL_GetDrawableSize(g_windows, &width, &height);
+
+    g_width = static_cast<float>(width);
+    g_height = static_cast<float>(height);
+}
+
 bool Graphics::Init(WindowType _fullscreen)
 {
     SDL_DisableScreenSaver();
@@ -1088,16 +1133,30 @@ bool Graphics::Init(WindowType _fullscreen)
         return 1;
     }
 
+#ifdef __APPLE__
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
+    // 3.3 for sampler objects
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
+#else
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+#endif // __APPLE__
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     InitSizesAndLlisteners();
     InstallClickAnywhereFullscreen();
 
-    g_windows =
-        SDL_CreateWindow("Second Reality++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_width, g_height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+#ifdef __APPLE__
+    // Retina: render at native pixel resolution
+    const Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+#else
+    const Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+#endif // __APPLE__
+
+    g_windows = SDL_CreateWindow("Second Reality++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_width, g_height, windowFlags);
 
     if (!g_windows)
     {
@@ -1111,6 +1170,10 @@ bool Graphics::Init(WindowType _fullscreen)
 
     SDL_GL_MakeCurrent(g_windows, g_context);
     SDL_GL_SetSwapInterval(0);
+
+#ifndef __EMSCRIPTEN__
+    UpdateDrawableSize();
+#endif // __EMSCRIPTEN__
 
     SDL_MaximizeWindow(g_windows);
 
@@ -1140,8 +1203,8 @@ void Graphics::Update()
         {
             if (ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
             {
-                g_width = ev.window.data1;
-                g_height = ev.window.data2;
+                // event carries window points; GL needs drawable pixels
+                UpdateDrawableSize();
             }
         }
     }
@@ -1165,6 +1228,9 @@ void Graphics::Close()
     if (g_nearestSampling) glDeleteSamplers(1, &g_nearestSampling);
     if (g_texture) glDeleteTextures(1, &g_texture);
     if (g_VBO) glDeleteBuffers(1, &g_VBO);
+#ifdef __APPLE__
+    if (g_VAO) glDeleteVertexArrays(1, &g_VAO);
+#endif
     if (g_prog) glDeleteProgram(g_prog);
 
     SDL_GL_DeleteContext(g_context);

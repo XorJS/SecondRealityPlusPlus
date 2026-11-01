@@ -13,6 +13,10 @@ linux: CXX := clang++
 linux: CC  := clang
 linux: all
 
+macos: CXX := clang++
+macos: CC  := clang
+macos: all
+
 CXX ?= em++
 CC  ?= emcc
 
@@ -24,6 +28,11 @@ ifeq ($(findstring em++,$(notdir $(CXX))),em++)
 	OUTPUT_DIR ?= $(ROOT_OUTPUT_DIR)/web
 	OUT ?= index
 	EXT ?= .html
+else ifeq ($(shell uname -s),Darwin)
+	BUILD_DIR ?= $(ROOT_BUILD_DIR)/macos
+	OUTPUT_DIR ?= $(ROOT_OUTPUT_DIR)/macos
+	OUT ?= secondreality
+	EXT ?= 
 else
 	BUILD_DIR ?= $(ROOT_BUILD_DIR)/linux
 	OUTPUT_DIR ?= $(ROOT_OUTPUT_DIR)/linux
@@ -48,7 +57,11 @@ ifeq ($(findstring em++,$(notdir $(CXX))),em++)
   LDFLAGS  += $(EM_LINK_FLAGS)
 else
   CXXFLAGS += $(shell sdl2-config --cflags)
-  LDLIBS   += $(shell sdl2-config --libs) -lGLESv2
+  ifeq ($(shell uname -s),Darwin)
+    LDLIBS += $(shell sdl2-config --libs) -framework OpenGL
+  else
+    LDLIBS += $(shell sdl2-config --libs) -lGLESv2
+  endif
 endif
 
 ifeq ($(OS),Windows_NT)
@@ -100,6 +113,7 @@ help:
 	@echo   make tree : show sources/objects/target
 	@echo   make clean : clean-up
 	@echo   make linux : linux platform
+	@echo   make macos : macOS platform
 	@echo   emmake make web : web platform
 	@echo.
 	@echo if you get that [fatal error: SDL2/SDL.h: No such file or directory], run command below:
@@ -108,6 +122,7 @@ help:
 	@echo   Arch: sudo pacman -S sdl2
 	@echo   openSUSE: sudo zypper install libSDL2-devel
 	@echo   Alpine: sudo apk add sdl2-dev
+	@echo   macOS: brew install sdl2
 
 tree:
 	@echo "Sources (C++):"

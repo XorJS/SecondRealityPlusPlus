@@ -14,11 +14,13 @@ C++ version of "Second Reality by Future Crew"
 ## Platforms
 - Windows x64 / x86
 - Linux (Ubuntu)
+- macOS (Apple Silicon)
 - Web browsers (e.g. Google Chrome)
 
 ## Tested
 - Windows: Win10/11 (x64 and x86 versions)
 - Linux: Ubuntu
+- macOS: macOS 27 on Apple Silicon (M1 Pro)
 - Web: macOS(Safari), android, iOS, Windows(Chrome/Firefox/Edge), Ubuntu(Firefox/Chrome)
 * For the web, Chrome is the best for the experience 
 
@@ -55,6 +57,11 @@ C++ version of "Second Reality by Future Crew"
 
 ### Linux
 - Launch ./buildLinux.sh script
+
+### macOS
+- Install the [Homebrew](https://brew.sh) SDL2 package: `brew install sdl2`
+- Run `make macos`
+- Start `./_Builds/macos/secondreality`
 
 ### Web
 - Setup [emscripten](https://emscripten.org/docs/getting_started/downloads.html)
