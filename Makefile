@@ -64,7 +64,8 @@ else
   NULLDEV   := /dev/null
 endif
 
-rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*/),$(call rwildcard,$d,$2))
+# "*/." matches directories only; GNU make 3.81 (macOS) also returns files for "*/"
+rwildcard = $(wildcard $1$2) $(foreach d,$(wildcard $1*/.),$(call rwildcard,$(d:.=),$2))
 
 CPP_EXTS := cpp cc cxx CPP C++
 C_EXTS   := c
