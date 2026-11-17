@@ -49,18 +49,18 @@ CXXFLAGS  ?= -O3 -std=c++20 -Wall -Wextra -Wno-missing-braces -Wno-unused-functi
 CFLAGS    ?= -O3 -Wall -Wextra -Wno-missing-braces -Wno-unused-function
 
 ifeq ($(findstring em++,$(notdir $(CXX))),em++)
-  EM_COMPILE_FLAGS := -sUSE_SDL=2
-  EM_LINK_FLAGS    := -sUSE_SDL=2 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sFULL_ES3=1 -sALLOW_MEMORY_GROWTH=1 -sWASM=1 -sASYNCIFY
+  EM_COMPILE_FLAGS := --use-port=sdl3
+  EM_LINK_FLAGS    := --use-port=sdl3 -sMIN_WEBGL_VERSION=2 -sMAX_WEBGL_VERSION=2 -sFULL_ES3=1 -sALLOW_MEMORY_GROWTH=1 -sWASM=1 -sASYNCIFY
 
   CXXFLAGS += $(EM_COMPILE_FLAGS)
   CFLAGS   += $(EM_COMPILE_FLAGS)
   LDFLAGS  += $(EM_LINK_FLAGS)
 else
-  CXXFLAGS += $(shell sdl2-config --cflags)
+  CXXFLAGS += $(shell pkg-config --cflags sdl3)
   ifeq ($(shell uname -s),Darwin)
-    LDLIBS += $(shell sdl2-config --libs) -framework OpenGL
+    LDLIBS += $(shell pkg-config --libs sdl3) -framework OpenGL
   else
-    LDLIBS += $(shell sdl2-config --libs) -lGLESv2
+    LDLIBS += $(shell pkg-config --libs sdl3) -lGLESv2
   endif
 endif
 
@@ -116,13 +116,13 @@ help:
 	@echo   make macos : macOS platform
 	@echo   emmake make web : web platform
 	@echo.
-	@echo if you get that [fatal error: SDL2/SDL.h: No such file or directory], run command below:
-	@echo   Ubuntu/Debian: sudo apt install libsdl2-dev
-	@echo   Fedora: sudo dnf install SDL2-devel
-	@echo   Arch: sudo pacman -S sdl2
-	@echo   openSUSE: sudo zypper install libSDL2-devel
-	@echo   Alpine: sudo apk add sdl2-dev
-	@echo   macOS: brew install sdl2
+	@echo if you get that [fatal error: SDL3/SDL.h: No such file or directory], run command below:
+	@echo   Ubuntu 25.04+/Debian 13+: sudo apt install libsdl3-dev
+	@echo   Fedora: sudo dnf install SDL3-devel
+	@echo   Arch: sudo pacman -S sdl3
+	@echo   openSUSE: sudo zypper install SDL3-devel
+	@echo   Alpine: sudo apk add sdl3-dev
+	@echo   macOS: brew install sdl3 pkgconf
 
 tree:
 	@echo "Sources (C++):"

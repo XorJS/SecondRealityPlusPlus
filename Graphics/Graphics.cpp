@@ -18,9 +18,9 @@
 #else
 #define GL_GLEXT_PROTOTYPES 1
 #include <GLES3/gl3.h>
-#include <SDL_opengles2.h>
+#include <SDL3/SDL_opengles2.h>
 #endif // __APPLE__
-#include <SDL.h>
+#include <SDL3/SDL.h>
 
 #ifdef __EMSCRIPTEN__
 
@@ -1117,7 +1117,7 @@ void InstallClickAnywhereFullscreen() {}
 static void UpdateDrawableSize()
 {
     int width = 0, height = 0;
-    SDL_GL_GetDrawableSize(g_windows, &width, &height);
+    SDL_GetWindowSizeInPixels(g_windows, &width, &height);
 
     g_width = static_cast<float>(width);
     g_height = static_cast<float>(height);
@@ -1127,7 +1127,12 @@ bool Graphics::Init(WindowType _fullscreen)
 {
     SDL_DisableScreenSaver();
 
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS) != 0)
+#ifdef __APPLE__
+    // SDL3 does not activate the app on macOS 14+ by default: the window would open behind the terminal
+    SDL_SetHint(SDL_HINT_MAC_BACKGROUND_APP, "0");
+#endif // __APPLE__
+
+    if (!SDL_Init(SDL_INIT_VIDEO | SDL_INIT_EVENTS))
     {
         std::fprintf(stderr, "SDL_Init failed: %s\n", SDL_GetError());
         return 1;
@@ -1140,8 +1145,9 @@ bool Graphics::Init(WindowType _fullscreen)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 #else
+    // ES 3.0 for sampler objects; on the web SDL3 maps the major version to the WebGL version
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
-    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+    SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
 #endif // __APPLE__
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
@@ -1151,12 +1157,12 @@ bool Graphics::Init(WindowType _fullscreen)
 
 #ifdef __APPLE__
     // Retina: render at native pixel resolution
-    const Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI;
+    const SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 #else
-    const Uint32 windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
+    const SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE;
 #endif // __APPLE__
 
-    g_windows = SDL_CreateWindow("Second Reality++", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, g_width, g_height, windowFlags);
+    g_windows = SDL_CreateWindow("Second Reality++", static_cast<int>(g_width), static_cast<int>(g_height), windowFlags);
 
     if (!g_windows)
     {
@@ -1179,8 +1185,9 @@ bool Graphics::Init(WindowType _fullscreen)
 
     if (_fullscreen == WindowType::Fullscreen)
     {
-        SDL_SetWindowFullscreen(g_windows, SDL_WINDOW_FULLSCREEN_DESKTOP);
-        SDL_ShowCursor(SDL_DISABLE);
+        // no fullscreen mode set: borderless desktop fullscreen
+        SDL_SetWindowFullscreen(g_windows, true);
+        SDL_HideCursor();
     }
 
     initGL();
@@ -1194,18 +1201,14 @@ void Graphics::Update()
     SDL_Event ev;
     while (SDL_PollEvent(&ev))
     {
-        if ((ev.type == SDL_QUIT) || (ev.type == SDL_KEYUP && ev.key.keysym.sym == SDLK_ESCAPE))
+        if ((ev.type == SDL_EVENT_QUIT) || (ev.type == SDL_EVENT_KEY_UP && ev.key.key == SDLK_ESCAPE))
         {
             g_wantsToQuit = true;
         }
 
-        if (ev.type == SDL_WINDOWEVENT)
+        if (ev.type == SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED)
         {
-            if (ev.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
-            {
-                // event carries window points; GL needs drawable pixels
-                UpdateDrawableSize();
-            }
+            UpdateDrawableSize();
         }
     }
 #endif // __EMSCRIPTEN__
@@ -1233,7 +1236,7 @@ void Graphics::Close()
 #endif
     if (g_prog) glDeleteProgram(g_prog);
 
-    SDL_GL_DeleteContext(g_context);
+    SDL_GL_DestroyContext(g_context);
     SDL_DestroyWindow(g_windows);
     SDL_Quit();
 #endif // __EMSCRIPTEN__
