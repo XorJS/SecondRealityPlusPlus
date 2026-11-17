@@ -229,6 +229,15 @@ void MessageBoxA(void * /*hWnd*/, const char * text, const char * caption, int /
 }
 #endif
 
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_IOS
+// renames main() to SDL_main(), started by SDL's UIApplication delegate;
+// included here so the parts' main() functions keep their names
+#include <SDL3/SDL_main.h>
+#endif
+#endif
+
 int main(int argc, char * argv[])
 {
     if (argc > 1)

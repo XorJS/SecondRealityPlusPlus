@@ -1,0 +1,5 @@
+// Defaults; Local.xcconfig (untracked) sets the team and your own bundle ID
+PRODUCT_BUNDLE_IDENTIFIER = com.example.secondreality
+DEVELOPMENT_TEAM =
+
+#include? "Local.xcconfig"

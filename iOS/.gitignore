@@ -1,0 +1,5 @@
+_deps
+_build
+SecondReality.xcodeproj
+Info.plist
+Local.xcconfig

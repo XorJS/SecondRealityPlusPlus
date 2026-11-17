@@ -86,7 +86,7 @@ C_EXTS   := c
 CPP_SOURCES := $(foreach e,$(CPP_EXTS),$(call rwildcard,$(SRC_DIR)/,*.$(e)))
 C_SOURCES   := $(foreach e,$(C_EXTS),  $(call rwildcard,$(SRC_DIR)/,*.$(e)))
 
-EXCLUDE_DIRS ?= References
+EXCLUDE_DIRS ?= References iOS
 EXCLUDE_GLOBS := $(foreach d,$(EXCLUDE_DIRS),$(SRC_DIR)/$(d)/%)
 
 CPP_SOURCES   := $(filter-out $(EXCLUDE_GLOBS),$(CPP_SOURCES))

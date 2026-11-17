@@ -13,13 +13,22 @@
 #else
 
 #ifdef __APPLE__
+#include <TargetConditionals.h>
+#endif // __APPLE__
+
+#if defined(__APPLE__) && TARGET_OS_IOS
+#define GLES_SILENCE_DEPRECATION 1
+#include <OpenGLES/ES3/gl.h>
+#elif defined(__APPLE__)
+// macOS has no OpenGL ES: desktop core profile instead
+#define MACOS_CORE_GL 1
 #define GL_SILENCE_DEPRECATION 1
 #include <OpenGL/gl3.h>
 #else
 #define GL_GLEXT_PROTOTYPES 1
 #include <GLES3/gl3.h>
 #include <SDL3/SDL_opengles2.h>
-#endif // __APPLE__
+#endif
 #include <SDL3/SDL.h>
 
 #ifdef __EMSCRIPTEN__
@@ -643,7 +652,7 @@ namespace
     GLint g_Loc_uTex0 = -1;
     GLint g_Loc_uTex1 = -1;
     GLuint g_VBO = 0;
-#ifdef __APPLE__
+#ifdef MACOS_CORE_GL
     GLuint g_VAO = 0;
 #endif
     GLuint g_texture = 0;
@@ -725,7 +734,7 @@ void UpdateTextureRGBA8(GLuint tex, int w, int h, const void * pixels)
 
 static void initGL()
 {
-#ifdef __APPLE__
+#ifdef MACOS_CORE_GL
     // Core profile: GLSL 1.50 and a bound VAO are mandatory
     const char * vertexShader = "#version 150\n"
                                 "in      vec2 aPos;\n"
@@ -772,7 +781,7 @@ static void initGL()
                                   "void main(){\n"
                                   "  gl_FragColor = vec4(mix(texture2D(uTex0, vUV).bgr, texture2D(uTex1, vUV).bgr, uResolution.z),1);\n"
                                   "}\n";
-#endif // __APPLE__
+#endif // MACOS_CORE_GL
 
     GLuint vs = compileShader(GL_VERTEX_SHADER, vertexShader);
     GLuint fs = compileShader(GL_FRAGMENT_SHADER, fragmentShader);
@@ -1138,7 +1147,7 @@ bool Graphics::Init(WindowType _fullscreen)
         return 1;
     }
 
-#ifdef __APPLE__
+#ifdef MACOS_CORE_GL
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_FORWARD_COMPATIBLE_FLAG);
     // 3.3 for sampler objects
@@ -1149,13 +1158,21 @@ bool Graphics::Init(WindowType _fullscreen)
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
     SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
-#endif // __APPLE__
+#endif // MACOS_CORE_GL
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
     InitSizesAndLlisteners();
     InstallClickAnywhereFullscreen();
 
-#ifdef __APPLE__
+#if defined(__APPLE__) && TARGET_OS_IOS
+    // landscape only, no status bar, home indicator dimmed
+    SDL_SetHint(SDL_HINT_ORIENTATIONS, "LandscapeLeft LandscapeRight");
+    SDL_SetHint(SDL_HINT_IOS_HIDE_HOME_INDICATOR, "2");
+    // play even with the silent switch on
+    SDL_SetHint(SDL_HINT_AUDIO_CATEGORY, "playback");
+
+    const SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_FULLSCREEN | SDL_WINDOW_BORDERLESS | SDL_WINDOW_HIGH_PIXEL_DENSITY;
+#elif defined(__APPLE__)
     // Retina: render at native pixel resolution
     const SDL_WindowFlags windowFlags = SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE | SDL_WINDOW_HIGH_PIXEL_DENSITY;
 #else
@@ -1210,6 +1227,21 @@ void Graphics::Update()
         {
             UpdateDrawableSize();
         }
+
+#if defined(__APPLE__) && TARGET_OS_IOS
+        // iOS kills apps issuing GL calls in the background: block until foreground
+        if (ev.type == SDL_EVENT_WILL_ENTER_BACKGROUND)
+        {
+            while (SDL_WaitEvent(&ev) && ev.type != SDL_EVENT_DID_ENTER_FOREGROUND)
+            {
+                if (ev.type == SDL_EVENT_QUIT || ev.type == SDL_EVENT_TERMINATING)
+                {
+                    g_wantsToQuit = true;
+                    return;
+                }
+            }
+        }
+#endif
     }
 #endif // __EMSCRIPTEN__
 
@@ -1231,7 +1263,7 @@ void Graphics::Close()
     if (g_nearestSampling) glDeleteSamplers(1, &g_nearestSampling);
     if (g_texture) glDeleteTextures(1, &g_texture);
     if (g_VBO) glDeleteBuffers(1, &g_VBO);
-#ifdef __APPLE__
+#ifdef MACOS_CORE_GL
     if (g_VAO) glDeleteVertexArrays(1, &g_VAO);
 #endif
     if (g_prog) glDeleteProgram(g_prog);
