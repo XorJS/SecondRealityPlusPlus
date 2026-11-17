@@ -39,7 +39,6 @@ targets:
       - sdk: AudioToolbox.framework
       - sdk: CoreAudio.framework
       - sdk: CoreFoundation.framework
-      - sdk: CoreBluetooth.framework
       - sdk: CoreGraphics.framework
       - sdk: CoreHaptics.framework
       - sdk: CoreMotion.framework

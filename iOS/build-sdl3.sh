@@ -1,6 +1,7 @@
 #!/bin/sh
 # Builds SDL3 as a static xcframework (device + simulator) into iOS/_deps;
-# camera support is left out (would need CoreMedia/CoreVideo and a usage description)
+# camera support is left out (would need CoreMedia/CoreVideo and a usage description),
+# so is HIDAPI (CoreBluetooth, ditto); controllers still work through GameController
 set -eu
 
 SDL_VERSION=3.4.20
@@ -25,7 +26,7 @@ build() {
         -DCMAKE_OSX_ARCHITECTURES=arm64 \
         -DCMAKE_OSX_DEPLOYMENT_TARGET=15.0 \
         -DSDL_SHARED=OFF -DSDL_STATIC=ON -DSDL_TEST_LIBRARY=OFF \
-        -DSDL_CAMERA=OFF
+        -DSDL_CAMERA=OFF -DSDL_HIDAPI=OFF
     cmake --build "$DEPS/build-$sysroot" --config Release
     cmake --install "$DEPS/build-$sysroot" --config Release --prefix "$DEPS/install-$sysroot"
 }
