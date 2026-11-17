@@ -158,9 +158,22 @@ int demo_vsync(bool updateAudio)
         elapsed = now - g_lastVblank;
     }
 
-    g_lastVblank = now;
+    // like the original retrace wait: report every 70 Hz tick that passed, so parts
+    // keep pace with the music on displays that present fewer frames (iOS: 60 Hz)
+    int ticks = static_cast<int>(elapsed / cycle_ms);
 
-    return 1;
+    if (ticks > 70)
+    {
+        // long stall (startup, app in background): resync instead of jumping ahead
+        ticks = 1;
+        g_lastVblank = now;
+    }
+    else
+    {
+        g_lastVblank += ticks * cycle_ms;
+    }
+
+    return ticks;
 }
 
 void mainLoop()
