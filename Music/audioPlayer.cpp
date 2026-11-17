@@ -18,7 +18,7 @@
 #include <emscripten.h>
 #endif // __EMSCRIPTEN__
 
-#include <SDL.h>
+#include <SDL3/SDL.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
@@ -119,7 +119,7 @@ typedef HWAVEOUT * LPHWAVEOUT;
 
 struct WASM_WaveOut
 {
-    SDL_AudioDeviceID dev = 0;
+    SDL_AudioStream * stream = nullptr;
     SDL_AudioSpec spec{};
     uint64_t bytes_submitted = 0;
 
@@ -135,13 +135,13 @@ struct WASM_WaveOut
     // Format helpers
     uint32_t frame_bytes() const
     {
-        uint32_t sample_bytes = (spec.format == AUDIO_F32) ? 4 : (spec.format == AUDIO_S16) ? 2 : (spec.format == AUDIO_S8 || spec.format == AUDIO_U8) ? 1 : 2;
-        return sample_bytes * spec.channels;
+        return SDL_AUDIO_FRAMESIZE(spec);
     }
 
     uint64_t bytes_played() const
     {
-        uint64_t queued = SDL_GetQueuedAudioSize(dev);
+        const int queued_bytes = SDL_GetAudioStreamQueued(stream);
+        const uint64_t queued = (queued_bytes > 0) ? (uint64_t)queued_bytes : 0;
         return (bytes_submitted > queued) ? (bytes_submitted - queued) : 0;
     }
 
@@ -236,12 +236,12 @@ namespace AudioPlayer
 
     static SDL_AudioFormat wasm_pick_sdl_format(const WAVEFORMATEX * wfx)
     {
-        if (wfx->wFormatTag == WAVE_FORMAT_IEEE_FLOAT && wfx->wBitsPerSample == 32) return AUDIO_F32;
-        if (wfx->wBitsPerSample == 8) return AUDIO_U8;
-        if (wfx->wBitsPerSample == 16) return AUDIO_S16;
-        if (wfx->wBitsPerSample == 32) return AUDIO_F32; // common on the web
+        if (wfx->wFormatTag == WAVE_FORMAT_IEEE_FLOAT && wfx->wBitsPerSample == 32) return SDL_AUDIO_F32;
+        if (wfx->wBitsPerSample == 8) return SDL_AUDIO_U8;
+        if (wfx->wBitsPerSample == 16) return SDL_AUDIO_S16;
+        if (wfx->wBitsPerSample == 32) return SDL_AUDIO_F32; // common on the web
 
-        return AUDIO_S16;
+        return SDL_AUDIO_S16;
     }
 
     inline MMRESULT waveOutOpen(LPHWAVEOUT phwo, UINT /*uDeviceID*/, LPCWAVEFORMATEX pwfx, DWORD_PTR /*dwCallback*/, DWORD_PTR /*dwInstance*/,
@@ -251,21 +251,22 @@ namespace AudioPlayer
 
         if (SDL_WasInit(SDL_INIT_AUDIO) == 0)
         {
-            if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) return MMSYSERR_ERROR;
+            if (!SDL_InitSubSystem(SDL_INIT_AUDIO)) return MMSYSERR_ERROR;
         }
 
-        SDL_AudioSpec want{};
-        want.freq = (int)pwfx->nSamplesPerSec;
-        want.channels = (Uint8)pwfx->nChannels;
-        want.format = wasm_pick_sdl_format(pwfx);
-        want.samples = 1024;     // hint: tweak for latency/throughput
-        want.callback = nullptr; // we push via SDL_QueueAudio
-
         WASM_WaveOut ctx{};
-        ctx.dev = SDL_OpenAudioDevice(nullptr, 0, &want, &ctx.spec, 0);
-        if (!ctx.dev) return MMSYSERR_ERROR;
+        ctx.spec.freq = (int)pwfx->nSamplesPerSec;
+        ctx.spec.channels = (int)pwfx->nChannels;
+        ctx.spec.format = wasm_pick_sdl_format(pwfx);
 
-        SDL_PauseAudioDevice(ctx.dev, 0); // start device
+        // hint: tweak for latency/throughput
+        SDL_SetHint(SDL_HINT_AUDIO_DEVICE_SAMPLE_FRAMES, "1024");
+
+        // no callback: we push via SDL_PutAudioStreamData; the stream converts to the device format
+        ctx.stream = SDL_OpenAudioDeviceStream(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, &ctx.spec, nullptr, nullptr);
+        if (!ctx.stream) return MMSYSERR_ERROR;
+
+        SDL_ResumeAudioStreamDevice(ctx.stream); // start device
 
         // Allocate on heap for handle semantics
         WASM_WaveOut * heap = new WASM_WaveOut(ctx);
@@ -276,7 +277,7 @@ namespace AudioPlayer
     inline MMRESULT waveOutClose(HWAVEOUT hwo)
     {
         if (!hwo) return MMSYSERR_NOERROR;
-        if (hwo->dev) SDL_CloseAudioDevice(hwo->dev);
+        if (hwo->stream) SDL_DestroyAudioStream(hwo->stream);
         delete hwo;
         return MMSYSERR_NOERROR;
     }
@@ -293,7 +294,7 @@ namespace AudioPlayer
     {
         if (!hwo || !pwh || !pwh->lpData || pwh->dwBufferLength == 0) return MMSYSERR_ERROR;
 
-        if (SDL_QueueAudio(hwo->dev, pwh->lpData, pwh->dwBufferLength) != 0) return MMSYSERR_ERROR;
+        if (!SDL_PutAudioStreamData(hwo->stream, pwh->lpData, (int)pwh->dwBufferLength)) return MMSYSERR_ERROR;
 
         hwo->bytes_submitted += pwh->dwBufferLength;
         pwh->dwFlags &= ~WHDR_DONE;
@@ -352,7 +353,7 @@ namespace AudioPlayer
         hwo->queue.clear();
 
         // Drop any queued audio at SDL level and reset our position tracking.
-        SDL_ClearQueuedAudio(hwo->dev);
+        SDL_ClearAudioStream(hwo->stream);
 
         hwo->bytes_submitted = 0;
 

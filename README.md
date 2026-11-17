@@ -59,7 +59,7 @@ C++ version of "Second Reality by Future Crew"
 - Launch ./buildLinux.sh script
 
 ### macOS
-- Install the [Homebrew](https://brew.sh) SDL2 package: `brew install sdl2`
+- Install the [Homebrew](https://brew.sh) SDL3 and pkg-config packages: `brew install sdl3 pkgconf`
 - Run `make macos`
 - Start `./_Builds/macos/secondreality`
 
