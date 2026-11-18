@@ -158,9 +158,22 @@ int demo_vsync(bool updateAudio)
         elapsed = now - g_lastVblank;
     }
 
-    g_lastVblank = now;
+    // like the original retrace wait: report every 70 Hz tick that passed, so parts
+    // keep pace with the music on displays that present fewer frames (iOS: 60 Hz)
+    int ticks = static_cast<int>(elapsed / cycle_ms);
 
-    return 1;
+    if (ticks > 70)
+    {
+        // long stall (startup, app in background): resync instead of jumping ahead
+        ticks = 1;
+        g_lastVblank = now;
+    }
+    else
+    {
+        g_lastVblank += ticks * cycle_ms;
+    }
+
+    return ticks;
 }
 
 void mainLoop()
@@ -227,6 +240,15 @@ void MessageBoxA(void * /*hWnd*/, const char * text, const char * caption, int /
 {
     printf("%s\n\n%s", caption, text);
 }
+#endif
+
+#ifdef __APPLE__
+#include <TargetConditionals.h>
+#if TARGET_OS_IOS
+// renames main() to SDL_main(), started by SDL's UIApplication delegate;
+// included here so the parts' main() functions keep their names
+#include <SDL3/SDL_main.h>
+#endif
 #endif
 
 int main(int argc, char * argv[])

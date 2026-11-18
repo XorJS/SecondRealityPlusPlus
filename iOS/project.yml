@@ -1,0 +1,76 @@
+# xcodegen spec; run build-sdl3.sh first, then "xcodegen generate"
+# signing: copy Local.xcconfig.example to Local.xcconfig and set your team
+name: SecondReality
+
+options:
+  deploymentTarget:
+    iOS: "15.0"
+
+settings:
+  base:
+    CODE_SIGN_STYLE: Automatic
+    CLANG_CXX_LANGUAGE_STANDARD: c++20
+    HEADER_SEARCH_PATHS:
+      - $(SRCROOT)/..
+      - $(SRCROOT)/_deps/include
+  configs:
+    Release:
+      GCC_OPTIMIZATION_LEVEL: "3"
+
+targets:
+  SecondReality:
+    type: application
+    platform: iOS
+    # team and bundle ID: Signing.xcconfig, overridden by an untracked Local.xcconfig
+    configFiles:
+      Debug: Signing.xcconfig
+      Release: Signing.xcconfig
+    sources:
+      - path: ../main.cpp
+      - path: ../Blob
+      - path: ../Graphics
+      - path: ../Music
+      - path: ../Parts
+      - path: Assets.xcassets
+    dependencies:
+      - framework: _deps/SDL3.xcframework
+        embed: false
+      - sdk: AVFoundation.framework
+      - sdk: AudioToolbox.framework
+      - sdk: CoreAudio.framework
+      - sdk: CoreFoundation.framework
+      - sdk: CoreGraphics.framework
+      - sdk: CoreHaptics.framework
+      - sdk: CoreMotion.framework
+      - sdk: CoreVideo.framework
+      - sdk: Foundation.framework
+      - sdk: GameController.framework
+      - sdk: Metal.framework
+      - sdk: OpenGLES.framework
+      - sdk: QuartzCore.framework
+      - sdk: UIKit.framework
+    info:
+      path: Info.plist
+      properties:
+        CFBundleDisplayName: Second Reality
+        CFBundleShortVersionString: $(MARKETING_VERSION)
+        CFBundleVersion: $(CURRENT_PROJECT_VERSION)
+        UILaunchScreen: {}
+        UIRequiresFullScreen: true
+        UIStatusBarHidden: true
+        UISupportedInterfaceOrientations:
+          - UIInterfaceOrientationLandscapeLeft
+          - UIInterfaceOrientationLandscapeRight
+        ITSAppUsesNonExemptEncryption: false
+        # iOS 27 terminates apps without UIScene lifecycle; SDL3 supplies the
+        # scene configuration in code, the manifest makes UIKit ask for it
+        UIApplicationSceneManifest:
+          UIApplicationSupportsMultipleScenes: false
+    settings:
+      base:
+        TARGETED_DEVICE_FAMILY: "1,2"
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "3"
+        # SDL3 is Objective-C; a C++-only target does not pull in the runtime
+        OTHER_LDFLAGS: -lobjc

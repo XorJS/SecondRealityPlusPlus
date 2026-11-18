@@ -15,6 +15,7 @@ C++ version of "Second Reality by Future Crew"
 - Windows x64 / x86
 - Linux (Ubuntu)
 - macOS (Apple Silicon)
+- iOS / iPadOS
 - Web browsers (e.g. Google Chrome)
 
 ## Tested
@@ -62,6 +63,12 @@ C++ version of "Second Reality by Future Crew"
 - Install the [Homebrew](https://brew.sh) SDL3 and pkg-config packages: `brew install sdl3 pkgconf`
 - Run `make macos`
 - Start `./_Builds/macos/secondreality`
+
+### iOS
+- Install [XcodeGen](https://github.com/yonaskolb/XcodeGen) and CMake: `brew install xcodegen cmake`
+- Run `iOS/build-sdl3.sh` (downloads SDL3 and builds it for device and simulator)
+- Copy `iOS/Local.xcconfig.example` to `iOS/Local.xcconfig` and set your team ID and bundle ID
+- Run `xcodegen generate` in `iOS/` and open `iOS/SecondReality.xcodeproj`
 
 ### Web
 - Setup [emscripten](https://emscripten.org/docs/getting_started/downloads.html)
